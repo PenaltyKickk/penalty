@@ -5,7 +5,14 @@
 
 <script>
 export default {
-  name: 'home'
+  name: 'home',
+  methods: {
+    joinRoom(id){
+
+    }
+  },
+  created(){
+  }
 }
 </script>
 
