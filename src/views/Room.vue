@@ -103,5 +103,10 @@ export default {
 </script>
 
 <style>
-
+  #room {
+    background-image: url('../assets/home-bg.jpg');
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+  }
 </style>
