@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    playerName: '',
     roomId: '',
     master: {
       name: null,
@@ -24,6 +25,9 @@ export default new Vuex.Store({
   mutations: {
     CHANGE_ROOM(state, payload){
       state.roomId = payload
+    },
+    SET_PLAYER_NAME (state, payload) {
+      state.playerName = payload
     }
   },
   actions: {
