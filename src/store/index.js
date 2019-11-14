@@ -64,9 +64,44 @@ export default new Vuex.Store({
     },
     updateScoreHost({state, commit}, payload){
       const roomId =  payload
-      delete payload.roomId
       db.collection('rooms').doc(roomId).update({
-        "host.position": payload
+        "host.score": payload.score
+      })
+        .then(_=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    updateScoreGuest({state, commit}, payload){
+      const roomId =  payload
+      db.collection('rooms').doc(roomId).update({
+        "guest.score": payload.score
+      })
+        .then(_=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    hostTurn({state, commit}, payload){
+      const roomId =  payload
+      db.collection('rooms').doc(roomId).update({
+        "host.position": payload.position
+      })
+        .then(_=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    guestTurn({state, commit}, payload){
+      const roomId =  payload
+      db.collection('rooms').doc(roomId).update({
+        "guest.position": payload.position
       })
         .then(_=>{
           console.log('update success')
