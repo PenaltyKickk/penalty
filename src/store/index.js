@@ -10,7 +10,7 @@ export default new Vuex.Store({
     playerName: '',
     rooms: [],
     roomId: '',
-    master: {
+    host: {
       name: null,
       position: 5,
       ready: false,
@@ -34,9 +34,47 @@ export default new Vuex.Store({
     },
     CHANGE_ROOMS(state, payload){
       state.rooms = payload
+    },
+    CHANGE_HOST(state, payload){
+      state.host = payload
+    },
+    CHANGE_GUEST(state, payload){
+      state.guest = payload
+    },
+    CHANGE_HOST_ROLE(state, payload){
+      state.host.role = payload
+    },
+    CHANGE_GUEST_ROLE(state, payload){
+      state.guest.role = payload
     }
   },
   actions: {
+    updateRoom({state, commit}, payload){
+      const roomId =  payload
+      delete payload.roomId
+      db.collection('rooms').doc(roomId).update({
+        host: payload
+      })
+        .then(doc=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    updateScoreHost({state, commit}, payload){
+      const roomId =  payload
+      delete payload.roomId
+      db.collection('rooms').doc(roomId).update({
+        "host.position": payload
+      })
+        .then(_=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
     getFreeRoom (context) {
       db.collection('rooms').where('available', '==', true)
       .onSnapshot((querySnapshot) => {

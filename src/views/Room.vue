@@ -18,11 +18,11 @@ export default {
   },
   created(){
     this.roomGet()
-    console.log(this.$store.state.roomId)
     db.collection("rooms").doc(this.$store.state.roomId)
-    .onSnapshot(function(doc){
-      console.log(" data: ", doc.data())
-    });
+    .onSnapshot((doc)=>{
+      this.$store.commit('CHANGE_HOST', doc.data().host)
+      this.$store.commit('CHANGE_GUEST', doc.data().guest)
+    })
   }
 }
 </script>
