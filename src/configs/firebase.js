@@ -1,6 +1,6 @@
-const firebase = require("firebase/app");
+const firebase = require('firebase/app')
 // Required for side-effects
-require("firebase/firestore");
+require('firebase/firestore')
 
 firebase.initializeApp({
   apiKey: process.env.VUE_APP_API_KEY,
@@ -12,6 +12,6 @@ firebase.initializeApp({
   appId: process.env.VUE_APP_APP_ID
 });
 
-var db = firebase.firestore();
+var db = firebase.firestore()
 
 export default db
