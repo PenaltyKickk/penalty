@@ -7,10 +7,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    updating: false,
     playerName: '',
     rooms: [],
     roomId: '',
-    master: {
+    host: {
       name: null,
       position: 5,
       ready: false,
@@ -34,9 +35,91 @@ export default new Vuex.Store({
     },
     CHANGE_ROOMS(state, payload){
       state.rooms = payload
+    },
+    CHANGE_HOST(state, payload){
+      state.host = payload
+    },
+    CHANGE_GUEST(state, payload){
+      state.guest = payload
+    },
+    CHANGE_HOST_ROLE(state, payload){
+      state.host.role = payload
+    },
+    CHANGE_GUEST_ROLE(state, payload){
+      state.guest.role = payload
+    },
+    CHANGE_UPDATING(state, payload){
+      state.updating = payload
     }
   },
   actions: {
+    updateRoom({state, commit}, payload){
+      const roomId =  payload
+      delete payload.roomId
+      db.collection('rooms').doc(roomId).update({
+        host: payload
+      })
+        .then(doc=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    updateScoreHost({state, commit, dispatch}, payload){
+      const roomId =  payload.roomId
+      console.log(payload)
+      db.collection('rooms').doc(roomId).update({
+        "host.score": payload.score
+      })
+        .then(_=>{
+          commit('CHANGE_UPDATING', true)
+          dispatch('changeRound', roomId)
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    updateScoreGuest({state, commit, dispatch}, payload){
+      const roomId =  payload.roomId
+      console.log(payload)
+      db.collection('rooms').doc(roomId).update({
+        "guest.score": payload.score
+      })
+        .then(_=>{
+          commit('CHANGE_UPDATING', true)
+          dispatch('changeRound', roomId)
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    hostTurn({state, commit}, payload){
+      const roomId =  payload.roomId
+      db.collection('rooms').doc(roomId).update({
+        "host.position": payload.position,
+        "host.ready": true,
+      })
+        .then(_=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    guestTurn({state, commit}, payload){
+      const roomId =  payload.roomId
+      db.collection('rooms').doc(roomId).update({
+        "guest.position": payload.position,
+        "guest.ready": true
+      })
+        .then(_=>{
+          console.log('update success')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
     getFreeRoom (context) {
       db.collection('rooms').where('available', '==', true)
       .onSnapshot((querySnapshot) => {
@@ -92,6 +175,39 @@ export default new Vuex.Store({
       })
       .catch((error) => {
           console.error("Error updating document: ", error)
+      })
+    },
+    changeRound (context, payload) {
+      db.collection("rooms").doc(payload).get()
+      .then((room) => {
+        let hostRole = room.data().host.role;
+        let guestRole = room.data().guest.role;
+        let round = room.data().round;
+        round++;
+
+        if (hostRole === 'keeper') hostRole = "shooter"
+        else hostRole = "keeper"
+        if (guestRole === 'keeper') guestRole = "shooter"
+        else guestRole = "keeper"
+
+        return db.collection("rooms").doc(payload).update({
+            "host.role": hostRole,
+            "host.position": 5,
+            "host.ready": false,
+            "guest.role": guestRole,
+            "guest.position": 5,
+            "guest.ready": false,
+            round: round
+        })
+      })
+      .then(() => {
+      context.commit('CHANGE_UPDATING', false)
+        localStorage.setItem('room', payload)
+        router.push('/room/'+payload)
+      })
+      .catch((error) => {
+        context.commit('CHANGE_UPDATING', false)
+        console.error("Error change round : ", error)
       })
     }
   },
