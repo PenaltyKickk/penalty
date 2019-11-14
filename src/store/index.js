@@ -92,6 +92,37 @@ export default new Vuex.Store({
       .catch((error) => {
           console.error("Error updating document: ", error)
       })
+    },
+    changeRound (context, payload) {
+      db.collection("rooms").doc(payload).get()
+      .then((room) => {
+        let hostRole = room.data().host.role;
+        let guestRole = room.data().guest.role;
+        let round = room.data().round;
+        round++;
+
+        if (hostRole === 'keeper') hostRole = "shooter"
+        else hostRole = "keeper"
+        if (guestRole === 'keeper') guestRole = "shooter"
+        else guestRole = "keeper"
+
+        return db.collection("rooms").doc(payload).update({
+            "host.role": hostRole,
+            "host.position": 5,
+            "host.ready": false,
+            "guest.role": guestRole,
+            "guest.position": 5,
+            "guest.ready": false,
+            round: round
+        })
+      })
+      .then(() => {
+          localStorage.setItem('room', payload)
+          router.push('/room/'+payload)
+      })
+      .catch((error) => {
+          console.error("Error change round : ", error)
+      })
     }
   },
   modules: {

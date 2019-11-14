@@ -17,6 +17,7 @@
         <div v-for="room in rooms" :key="room.id">
           {{ room.id }}
           <button @click="joinRoom(room.id)">Join Room</button>
+          <button @click="changeRound(room.id)">Change Round</button>
         </div>
         <button @click="createRoom">Create Room</button>
       </div>
@@ -59,6 +60,9 @@ export default {
     },
     joinRoom (id) {
       this.$store.dispatch('joinRoom', id);
+    },
+    changeRound (id) {
+      this.$store.dispatch('changeRound', id);
     },
     removeRoom () {
       if (localStorage.getItem('room')) {
