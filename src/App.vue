@@ -8,7 +8,11 @@
 
 <script>
 export default {
-
+  created () {
+    // console.log('masuk play')
+    // var audio = new Audio('./assets/champions-song.mp3');
+    // audio.play();
+  }
 }
 </script>
 

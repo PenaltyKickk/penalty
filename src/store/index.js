@@ -51,8 +51,9 @@ export default new Vuex.Store({
           context.commit('CHANGE_ROOMS', lists)
       });
     },
-    createRoom (context) {
-      db.collection("rooms").add({
+    createRoom (context, payload) {
+      console.log('ini payload', payload)
+      db.collection('rooms').doc(payload).set({
         host: {
           name: localStorage.getItem('playerName'),
           role: 'keeper',
@@ -72,9 +73,9 @@ export default new Vuex.Store({
         available: true
       })
       .then((docRef) => {
-          localStorage.setItem('room', docRef.id)
-          context.commit('CHANGE_ROOM', docRef.id)
-          router.push('/room/'+docRef.id)
+          localStorage.setItem('room', payload)
+          context.commit('CHANGE_ROOM', payload)
+          router.push('/room/'+payload)
       })
       .catch((error) => {
           console.error("Error adding document: ", error)

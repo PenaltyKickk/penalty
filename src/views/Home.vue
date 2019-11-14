@@ -4,66 +4,30 @@
       <div class="input-form-content">
         <img src="../assets/logo.gif">
         <div style="margin-top: 20px; margin-bottom: 10px;">Enter your name!</div>
-        <form @submit.prevent="inputName">
+        <form @submit.prevent="toLobby">
           <b-field>
             <b-input rounded class="input-text" v-model="playerName" type="text" name="Name" id="input-name" placeholder="Cristiano Ronaldo"></b-input>
           </b-field>
-          <b-button class="button-home" type="is-primary">ENTER STADIUM</b-button>
+          <b-button @click="toLobby" class="button-home" type="submit">ENTER STADIUM</b-button>
         </form>
         <img style="height: 150px; margin-top: 20px;" src="../assets/keeper.png">
       </div>
     </div>
-      <div>
-        <div v-for="room in rooms" :key="room.id">
-          {{ room.id }}
-          <button @click="joinRoom(room.id)">Join Room</button>
-        </div>
-        <button @click="createRoom">Create Room</button>
-      </div>
   </div>
 </template>
 
 <script>
-import db from '../configs/firebase'
 
 export default {
-  name: 'home',
-  created () {
-    this.$store.dispatch('getFreeRoom');
-    if (localStorage.getItem('playerName')) {
-      this.showPlayerName = false
-    } else {
-      this.playerName = ''
-      this.showPlayerName = false
-    }
-  },
+  name: 'Home',
   data: () => ({
-    playerName: '',
-    showPlayerName: true
+    playerName: ''
   }),
-  computed: {
-    rooms () {
-      return this.$store.state.rooms
-    }
-  },
   methods: {
-    getPlayerName: function () {
+    toLobby () {
       localStorage.setItem('playerName', this.playerName)
       this.$store.commit('SET_PLAYER_NAME', this.playerName)
-      this.$router.push({ path: 'room' })
-      // this.$router.push({ path: 'room' })
-      this.showPlayerName = false
-    },
-    createRoom () {
-      this.$store.dispatch('createRoom');
-    },
-    joinRoom (id) {
-      this.$store.dispatch('joinRoom', id);
-    },
-    removeRoom () {
-      if (localStorage.getItem('room')) {
-
-      }
+      this.$router.push({ path: 'lobby' })
     }
   }
 }
@@ -116,5 +80,6 @@ export default {
     height: 50px;
     width: 200px;
     background: #97BE5B !important;
+    color: #FFFFFF !important;
   }
 </style>
