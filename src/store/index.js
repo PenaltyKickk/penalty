@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    updating: false,
     playerName: '',
     rooms: [],
     roomId: '',
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     },
     CHANGE_GUEST_ROLE(state, payload){
       state.guest.role = payload
+    },
+    CHANGE_UPDATING(state, payload){
+      state.updating = payload
     }
   },
   actions: {
@@ -62,34 +66,39 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
-    updateScoreHost({state, commit}, payload){
-      const roomId =  payload
+    updateScoreHost({state, commit, dispatch}, payload){
+      const roomId =  payload.roomId
+      console.log(payload)
       db.collection('rooms').doc(roomId).update({
         "host.score": payload.score
       })
         .then(_=>{
-          console.log('update success')
+          commit('CHANGE_UPDATING', true)
+          dispatch('changeRound', roomId)
         })
         .catch(err=>{
           console.log(err)
         })
     },
-    updateScoreGuest({state, commit}, payload){
-      const roomId =  payload
+    updateScoreGuest({state, commit, dispatch}, payload){
+      const roomId =  payload.roomId
+      console.log(payload)
       db.collection('rooms').doc(roomId).update({
         "guest.score": payload.score
       })
         .then(_=>{
-          console.log('update success')
+          commit('CHANGE_UPDATING', true)
+          dispatch('changeRound', roomId)
         })
         .catch(err=>{
           console.log(err)
         })
     },
     hostTurn({state, commit}, payload){
-      const roomId =  payload
+      const roomId =  payload.roomId
       db.collection('rooms').doc(roomId).update({
-        "host.position": payload.position
+        "host.position": payload.position,
+        "host.ready": true,
       })
         .then(_=>{
           console.log('update success')
@@ -99,9 +108,10 @@ export default new Vuex.Store({
         })
     },
     guestTurn({state, commit}, payload){
-      const roomId =  payload
+      const roomId =  payload.roomId
       db.collection('rooms').doc(roomId).update({
-        "guest.position": payload.position
+        "guest.position": payload.position,
+        "guest.ready": true
       })
         .then(_=>{
           console.log('update success')
@@ -190,11 +200,13 @@ export default new Vuex.Store({
         })
       })
       .then(() => {
-          localStorage.setItem('room', payload)
-          router.push('/room/'+payload)
+      context.commit('CHANGE_UPDATING', false)
+        localStorage.setItem('room', payload)
+        router.push('/room/'+payload)
       })
       .catch((error) => {
-          console.error("Error change round : ", error)
+        context.commit('CHANGE_UPDATING', false)
+        console.error("Error change round : ", error)
       })
     }
   },
