@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    room: ''
+    room: '',
+    playerName: ''
   },
   mutations: {
-    CHANGE_ROOM(state, payload){
+    CHANGE_ROOM (state, payload) {
       state.room = payload
+    },
+    SET_PLAYER_NAME (state, payload) {
+      state.playerName = payload
     }
   },
   actions: {
