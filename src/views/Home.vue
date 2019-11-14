@@ -29,7 +29,7 @@ export default {
       this.$router.push({ path: 'room' })
     },
     create () {
-      db.collection("cities").add({
+      db.collection("rooms").add({
           host: {
             name: localStorage.getItem('name'),
             role: 'keeper',
