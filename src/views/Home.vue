@@ -6,10 +6,15 @@
           <input type="submit" value="Join">
         </form>
       </div>
+      <div>
+        <button @click="create">Create Room</button>
+      </div>
   </div>
 </template>
 
 <script>
+import db from '../configs/firebase'
+
 export default {
   name: 'home',
  
@@ -22,6 +27,35 @@ export default {
     inputName: function () {
       localStorage.setItem('playerName', this.playerName)
       this.$router.push({ path: 'room' })
+    },
+    create () {
+      db.collection("cities").add({
+          host: {
+            name: localStorage.getItem('name'),
+            role: 'keeper',
+            position: 5,
+            ready: false,
+            score: 0
+          },
+          guest: {
+            name: null,
+            role: 'shooter',
+            position: 5,
+            ready: false,
+            score: 0
+          },
+          round: 1,
+          start: false,
+          available: true
+      })
+      .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id)
+          localStorage.setItem('room', docRef.id)
+          this.$store.state.roomId = docRef.id
+      })
+      .catch((error) => {
+          console.error("Error adding document: ", error)
+      })
     }
   }
 }

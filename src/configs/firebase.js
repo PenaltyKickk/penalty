@@ -10,7 +10,11 @@ firebase.initializeApp({
   storageBucket: process.env.VUE_APP_STOREAGE_BUCKET,
   messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER_ID,
   appId: process.env.VUE_APP_APP_ID
+<<<<<<< HEAD
 });
+=======
+}
+>>>>>>> Adding create room button
 
 var db = firebase.firestore()
 
