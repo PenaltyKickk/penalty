@@ -1,5 +1,8 @@
 <template>
   <div>
+    <button v-for="num in 6" :key="num" @click.prevent="move(num)">
+      {{ num }}
+    </button>
   </div>
 </template>
 
@@ -17,6 +20,21 @@ export default {
   methods: {
     roomGet(){
       this.$store.commit('CHANGE_ROOM', this.$route.params.id)
+    },
+    move(pos){
+      const role = localStorage.getItem('player')
+      if(role == 'host'){
+        this.$store.dispatch('hostTurn', {
+          roomId: this.$route.params.id,
+          position: pos
+        })
+      }
+      else{
+        this.$store.dispatch('guestTurn', {
+          roomId: this.$route.params.id,
+          position: pos
+        })
+      }
     }
   },
   computed: {
@@ -33,21 +51,48 @@ export default {
       this.start = data.start
 
       if(this.start){
-        if(host.ready && guest.ready){
+        if(host.ready && guest.ready && !this.$store.state.updating){
+          this.$store.commit('CHANGE_UPDATING', true)
           if(host.role == 'keeper'){
             if(host.position == guest.position){
-              this.$store.dispatch('updateScoreHost')
+              host.score++
+              const hostScore = host.score
+              console.log(hostScore)
+              this.$store.dispatch('updateScoreHost', {
+                roomId: this.$store.state.roomId,
+                score: hostScore
+              })
             }
             else{
-              this.$store.dispatch('updateScoreGuest')
+              guest.score++
+              const guestScore = guest.score
+              console.log(guestScore)
+
+              this.$store.dispatch('updateScoreGuest', {
+                roomId: this.$store.state.roomId,
+                score: guestScore
+              })
             }
           }
           else{
             if(host.position !== guest.position){
-              this.$store.dispatch('updateScoreHost')
+              host.score++
+              const hostScore = host.score
+              console.log(hostScore)
+              this.$store.dispatch('updateScoreHost', {
+                roomId: this.$store.state.roomId,
+                score: hostScore
+              })
             }
             else{
-              this.$store.dispatch('updateScoreGuest')
+              guest.score++
+              const guestScore = guest.score
+              console.log(guestScore)
+
+              this.$store.dispatch('updateScoreGuest', {
+                roomId: this.$store.state.roomId,
+                score: guestScore
+              })
             }
           }
         }
