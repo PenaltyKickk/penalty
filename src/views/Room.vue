@@ -18,10 +18,10 @@ export default {
   },
   created(){
     this.roomGet()
-    console.log(this.$store.state.room)
-    db.collection("rooms").doc(this.$store.state.room)
-    .onSnapshot(function(doc) {
-        console.log(" data: ", doc.data());
+    console.log(this.$store.state.roomId)
+    db.collection("rooms").doc(this.$store.state.roomId)
+    .onSnapshot(function(doc){
+      console.log(" data: ", doc.data())
     });
   }
 }
