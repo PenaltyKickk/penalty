@@ -17,7 +17,6 @@ import db from '../configs/firebase'
 
 export default {
   name: 'home',
- 
   created(){
   },
   data: () => ({

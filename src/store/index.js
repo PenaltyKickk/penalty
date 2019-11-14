@@ -5,11 +5,25 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    roomId: ''
+    roomId: '',
+    master: {
+      name: null,
+      position: 5,
+      ready: false,
+      role: 'kiper',
+      score: 0
+    },
+    guest: {
+      name: null,
+      position: 5,
+      ready: false,
+      role: 'shooter',
+      score: 0
+    }
   },
   mutations: {
     CHANGE_ROOM(state, payload){
-      state.room = payload
+      state.roomId = payload
     }
   },
   actions: {
