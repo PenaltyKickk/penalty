@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="#room">
+    aaaa
   </div>
 </template>
 
@@ -28,5 +29,10 @@ export default {
 </script>
 
 <style>
-
+  #room {
+    background-image: url('../assets/home-bg.jpg');
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+  }
 </style>

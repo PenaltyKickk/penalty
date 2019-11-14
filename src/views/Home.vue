@@ -6,7 +6,7 @@
         <div style="margin-top: 20px; margin-bottom: 10px;">Enter your name!</div>
         <form @submit.prevent="toLobby">
           <b-field>
-            <b-input rounded class="input-text" v-model="playerName" type="text" name="Name" id="input-name" placeholder="Cristiano Ronaldo"></b-input>
+            <b-input required rounded class="input-text" v-model="playerName" type="text" name="Name" id="input-name" placeholder="Cristiano Ronaldo"></b-input>
           </b-field>
           <b-button @click="toLobby" class="button-home" type="submit">ENTER STADIUM</b-button>
         </form>
@@ -54,7 +54,7 @@ export default {
   }
 
   .input-form {
-    box-shadow: 3px -1px 28px -6px rgba(0,0,0,0.75);
+    box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.1), 3px -1px 28px -6px rgba(0,0,0,0.75);
     width: 500px;
     height: 500px;
     margin-top: 100px;
@@ -75,6 +75,7 @@ export default {
   }
 
   .button-home {
+    box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.3);
     font-family: 'Luckiest Guy', cursive;
     font-size: 25px;
     height: 50px;

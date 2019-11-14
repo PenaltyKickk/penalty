@@ -84,6 +84,7 @@ export default {
   height: 100vh;
 }
 .button-lobby {
+  box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.1) !important;
   margin-top: 50px;
   font-family: 'Luckiest Guy', cursive;
   font-size: 25px;
@@ -107,10 +108,9 @@ export default {
   font-family: 'Chewy', cursive;
   color: #FFEBC8;
   font-size: 20px;
-  box-shadow: 3px -1px 28px -6px #FFEAC8;
   padding-top: 20px;
   padding-bottom: 20px;
-  box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.5);
+  box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.5), 3px -1px 28px -6px #FFEAC8;
 }
 
 .columns-room {
