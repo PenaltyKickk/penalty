@@ -62,7 +62,6 @@ export default {
     box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.1), 3px -1px 28px -6px rgba(0,0,0,0.75);
     width: 500px;
     height: 500px;
-    margin-top: 100px;
     padding-top: 50px;
     background-color: #FFFFFF;
     display: flex;
