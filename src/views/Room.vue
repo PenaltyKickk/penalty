@@ -32,6 +32,8 @@
         <img class="ball-image" src="../assets/ball.png">
       </div>
     </div>
+  <div>
+    <button v-if="host && ready" @click.prevent="startGame()">start</button>
   </div>
 </template>
 
