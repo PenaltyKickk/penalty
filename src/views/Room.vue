@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       start: false,
-      ballKickSound: new Audio('soccer-ball-hit.wav') // play this sound when the ball is kicked
+      ballKickSound: new Audio('soccer-ball-hit.wav'), // play this sound when the ball is kicked
       host:  false,
       ready: false,
       role: ''
