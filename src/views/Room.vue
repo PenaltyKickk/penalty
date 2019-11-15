@@ -44,6 +44,9 @@
         <img class="ball-image" src="../assets/ball.png" v-if="role === 'shooter' && (positionMusuh == 0 || !loggedReady)">
       </div>
     </div>
+    <div>
+      <button v-if="host && ready" @click.prevent="startGame()">start</button>
+    </div>
   </div>
 </template>
 
