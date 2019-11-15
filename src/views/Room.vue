@@ -108,7 +108,7 @@ export default {
       this.$store.dispatch('updateStart', true)
     },
     roomDone(){
-      this.$router.push('/test')
+      this.$router.push('/result')
     }
   },
   computed: {
@@ -139,7 +139,7 @@ export default {
       const guest = data.guest
 
       if(data.round > 6){
-        this.$router.push('/test')
+        this.$router.push('/result')
       }
       else{
         this.$store.commit('CHANGE_HOST', data.host)
@@ -303,7 +303,8 @@ export default {
     background: #FFEBC8 !important;
   }
   .info-container {
-    padding: 20px;
+    padding-top: 20px;
+    padding-left: 100px;
     font-family: 'Luckiest Guy', cursive;
     font-size: 30px;
     color: #FFFFFF;

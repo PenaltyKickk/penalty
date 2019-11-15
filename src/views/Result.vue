@@ -1,5 +1,5 @@
 <template>
-  <div id="home" v-on="playSoundEffect">
+  <div id="home">
     <img
       class="soccer-ball"
       src="https://media2.giphy.com/media/3mJpUDBH8EmAlx6pnz/giphy.gif"
@@ -8,13 +8,13 @@
     />
     <div class="scoreboard-container">
       <div class="scoreboard">
-        <div class="result-message" v-if="playerName === winnerName">
+        <div class="result-message" v-if="status === 'win'">
           <h1>Congratulations, you won the game!</h1>
         </div>
-        <div class="result-message" v-else-if="!winnerName">
+        <div class="result-message" v-if="status === 'draw'">
           <h1>It's a draw!</h1>
         </div>
-        <div class="result-message" v-else-if="winnerName && playerName !== winnerName">
+        <div class="result-message" v-if="status === 'lose'">
           <h1>You lost the game :(</h1>
         </div>
 
@@ -65,7 +65,9 @@ export default {
       };
     }
   },
-
+  created () {
+    this.playSoundEffect
+  },
   computed: mapState({
     playerName: "playerName",
     host: "host",
@@ -85,6 +87,42 @@ export default {
       if (state.host.score > state.guest.score) return state.host.name;
       if (state.host.score < state.guest.score) return state.guest.score;
       else return null;
+    },
+    hostScore(){
+      return this.$store.state.host.score
+    },
+    guestScore(){
+      return this.$store.state.guest.score
+    },
+    hostName() {
+      return this.$store.state.host.name
+    },
+    guestName() {
+      return this.$store.state.guest.name
+    },
+    status(){
+      console.log('ini logged role', localStorage.getItem('player'))
+      let role = localStorage.getItem('player')
+      console.log('ini role', role)
+      let result = 'draw'
+      if(role == 'host') {
+        if(this.hostScore > this.guestScore) {
+          result = 'win'
+        } else if(this.hostScore === this.guestScore) {
+          result = 'draw'
+        } else {
+          result = 'lose'
+        }
+      } else {
+        if(this.hostScore < this.guestScore) {
+          result = 'win'
+        } else if(this.hostScore === this.guestScore) {
+          result = 'draw'
+        } else {
+          result = 'lose'
+        }
+      }
+      return result
     }
   })
 };
