@@ -311,7 +311,10 @@ export default {
     background: #FFEBC8 !important;
   }
   .info-container {
-    padding-top: 20px;
+    box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.4) !important;
+    background: #EF773F;
+    padding-top: 10px;
+    padding-bottom: 10px;
     padding-left: 100px;
     font-family: 'Luckiest Guy', cursive;
     font-size: 30px;
