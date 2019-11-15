@@ -11,11 +11,12 @@ export default new Vuex.Store({
     playerName: '',
     rooms: [],
     roomId: '',
+    round: 0,
     host: {
       name: null,
       position: 5,
       ready: false,
-      role: 'kiper',
+      role: 'keeper',
       score: 0
     },
     guest: {
@@ -24,7 +25,9 @@ export default new Vuex.Store({
       ready: false,
       role: 'shooter',
       score: 0
-    }
+    },
+    position: 0,
+    positionMusuh: 0
   },
   mutations: {
     CHANGE_ROOM(state, payload){
@@ -50,6 +53,15 @@ export default new Vuex.Store({
     },
     CHANGE_UPDATING(state, payload){
       state.updating = payload
+    },
+    CHANGE_POSITION(state, payload){
+      state.position = payload
+    },
+    CHANGE_POSITION_MUSUH(state, payload){
+      state.positionMusuh = payload
+    },
+    CHANGE_ROUND(state, payload){
+      state.round = payload
     }
   },
   actions: {
@@ -73,6 +85,7 @@ export default new Vuex.Store({
         "host.score": payload.score
       })
         .then(_=>{
+          console.log('masuk change score host')
           commit('CHANGE_UPDATING', true)
           dispatch('changeRound', roomId)
         })
@@ -87,6 +100,7 @@ export default new Vuex.Store({
         "guest.score": payload.score
       })
         .then(_=>{
+          console.log('masuk change score guest')
           commit('CHANGE_UPDATING', true)
           dispatch('changeRound', roomId)
         })
@@ -120,6 +134,44 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
+    changeHostName({state, commit}){
+      const roomId = state.roomId
+      const playerName = localStorage.getItem('playerName')
+      db.collection('rooms').doc(roomId).update({
+        "host.name": playerName
+      })
+        .then(_=>{
+          console.log('Name Changed')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    changeGuestName({state, commit}){
+      const roomId = state.roomId
+      const playerName = localStorage.getItem('playerName')
+      db.collection('rooms').doc(roomId).update({
+        "guest.name": playerName
+      })
+        .then(_=>{
+          console.log('Name Changed')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    updateStart({state}, payload){
+      const roomId = state.roomId
+      db.collection('rooms').doc(roomId).update({
+        start: payload
+      })
+        .then(_=>{
+          console.log('Game Ready')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
     getFreeRoom (context) {
       db.collection('rooms').where('available', '==', true)
       .onSnapshot((querySnapshot) => {
@@ -140,14 +192,14 @@ export default new Vuex.Store({
         host: {
           name: localStorage.getItem('playerName'),
           role: 'keeper',
-          position: 5,
+          position: 0,
           ready: false,
           score: 0
         },
         guest: {
           name: null,
           role: 'shooter',
-          position: 5,
+          position: 0,
           ready: false,
           score: 0
         },
@@ -178,37 +230,38 @@ export default new Vuex.Store({
       })
     },
     changeRound (context, payload) {
-      db.collection("rooms").doc(payload).get()
-      .then((room) => {
-        let hostRole = room.data().host.role;
-        let guestRole = room.data().guest.role;
-        let round = room.data().round;
-        round++;
-
-        if (hostRole === 'keeper') hostRole = "shooter"
-        else hostRole = "keeper"
-        if (guestRole === 'keeper') guestRole = "shooter"
-        else guestRole = "keeper"
-
-        return db.collection("rooms").doc(payload).update({
-            "host.role": hostRole,
-            "host.position": 5,
-            "host.ready": false,
-            "guest.role": guestRole,
-            "guest.position": 5,
-            "guest.ready": false,
-            round: round
+      setTimeout(() => {
+        db.collection("rooms").doc(payload).get()
+        .then((room) => {
+          let hostRole = room.data().host.role;
+          let guestRole = room.data().guest.role;
+          let round = room.data().round;
+          round++;
+  
+          if (hostRole === 'keeper') hostRole = "shooter"
+          else hostRole = "keeper"
+          if (guestRole === 'keeper') guestRole = "shooter"
+          else guestRole = "keeper"
+  
+          return db.collection("rooms").doc(payload).update({
+              "host.role": hostRole,
+              "host.position": 0,
+              "host.ready": false,
+              "guest.role": guestRole,
+              "guest.position": 0,
+              "guest.ready": false,
+              round: round
+          })
         })
-      })
-      .then(() => {
-      context.commit('CHANGE_UPDATING', false)
-        localStorage.setItem('room', payload)
-        router.push('/room/'+payload)
-      })
-      .catch((error) => {
+        .then(() => {
         context.commit('CHANGE_UPDATING', false)
-        console.error("Error change round : ", error)
-      })
+          localStorage.setItem('room', payload)
+        })
+        .catch((error) => {
+          context.commit('CHANGE_UPDATING', false)
+          console.error("Error change round : ", error)
+        })
+      }, 3000)
     }
   },
   modules: {
