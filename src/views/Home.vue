@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <!-- <AudioButton/> -->
     <div class="input-form">
       <div class="input-form-content">
         <img src="../assets/logo.gif">
@@ -17,6 +18,7 @@
 </template>
 
 <script>
+// import AudioButton from '../components/AudioButton'
 
 export default {
   name: 'Home',
@@ -29,6 +31,9 @@ export default {
       this.$store.commit('SET_PLAYER_NAME', this.playerName)
       this.$router.push({ path: 'lobby' })
     }
+  },
+  components: {
+    // AudioButton
   }
 }
 </script>

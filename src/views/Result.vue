@@ -19,11 +19,11 @@
         </div>
 
         <div class="master-name">
-          <h1>{{ master.name ? master.name.toUpperCase() : '' }}</h1>
+          <h1>{{ host.name ? host.name.toUpperCase() : '' }}</h1>
         </div>
 
         <div class="master-score">
-          <h1>0{{ master.score ? master.score : 0 }}</h1>
+          <h1>0{{ host.score ? host.score : 0 }}</h1>
         </div>
 
         <div class="guest-name">
@@ -68,22 +68,22 @@ export default {
 
   computed: mapState({
     playerName: "playerName",
-    master: "master",
+    host: "host",
     guest: "guest",
 
     playSoundEffect: function (state) {
       if (this.winnerName === state.playerName) {
         return [this.cheer.play(), this.crowd.play()]
       }
-      else if (state.master.score === state.guest.score) {
+      else if (state.host.score === state.guest.score) {
         return [this.crowd.play()]
       }
       else if (this.winnerName !== state.playerName) return [this.boo.play(), this.crowd.play()]
     },
 
     winnerName: function (state) {
-      if (state.master.score > state.guest.score) return state.master.name;
-      if (state.master.score < state.guest.score) return state.guest.score;
+      if (state.host.score > state.guest.score) return state.host.name;
+      if (state.host.score < state.guest.score) return state.guest.score;
       else return null;
     }
   })
