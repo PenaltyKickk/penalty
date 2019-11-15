@@ -11,28 +11,32 @@
     <div class="post-container">
       <div class="columns is-multiline is-mobile columns-post">
         <div class="column is-4 column-post" v-for="num in 6" :key="num" @click.prevent="move(num)">
-          First column 
           <div v-if="position === num && positionMusuh === 0">
             <div v-if="role == 'keeper'">
-              ready keeper
+              <!-- ready keeper -->
+              <img class="image-keeper" src="../assets/just-keeper.png">
             </div>
             <div v-else>
-              ready bola
+              <!-- ready bola -->
+              <img class="image-ball" src="../assets/target.png">
             </div>
           </div>
           <div v-if="position === num && positionMusuh === num">
             <div>
-              bola dan keeper
+              <!-- bola dan keeper -->
+              <img class="image-keeper" src="../assets/ball-and-keeper.png">
             </div>
           </div>
           <div v-if="position === num && positionMusuh !== 0 && positionMusuh !== num">
             <div v-if="loggedRole == 'keeper'">
               <div>
-                keeper
+                <!-- keeper -->
+                <img class="image-keeper" src="../assets/just-keeper.png">
               </div>
             </div>
             <div v-else>
-              bola
+              <!-- bola -->
+              <img class="image-ball" src="../assets/ball.png">
             </div>
           </div>
         </div>
@@ -233,7 +237,7 @@ export default {
     background-image: url('../assets/crowd.jpg');
     background-position: 50px;
     background-size: cover;
-    opacity: 0.5;
+    /* opacity: 0.5; */
   }
   .columns-post {
     max-width: 600px;
@@ -250,6 +254,7 @@ export default {
   .column-post {
     height: 25vh;
     cursor: pointer;
+    text-align: center;
   }
   .post-container {
     padding-top: 10vh;
@@ -267,5 +272,11 @@ export default {
   }
   .ball-image {
     height: 80px;
+  }
+  .image-keeper {
+    height: 180px;
+  }
+  .image-ball {
+    height: 50px;
   }
 </style>

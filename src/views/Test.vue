@@ -1,7 +1,10 @@
 <template>
   <div>
+    {{ hostName }}
     {{ hostScore }}
 
+    <br>
+    {{ guestName }}
     {{ guestScore }}
   </div>
 </template>
@@ -14,6 +17,12 @@ export default {
     },
     guestScore(){
       return this.$store.state.guest.score
+    },
+    hostName() {
+      return this.$store.state.host.name
+    },
+    guestName() {
+      return this.$store.state.guest.name
     }
   }
 }
