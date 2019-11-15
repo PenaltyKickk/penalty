@@ -6,12 +6,20 @@
     <div class="room-container">
       <div>
         <button v-if="host && ready && !start" @click.prevent="startGame()">start</button>
+        {{ round }}
       </div>
     <div class="post-container">
       <div class="columns is-multiline is-mobile columns-post">
         <div class="column is-4 column-post" v-for="num in 6" :key="num" @click.prevent="move(num)">
           First column 
-          <div v-if="position === num && positionMusuh === 0">Ready</div>
+          <div v-if="position === num && positionMusuh === 0">
+            <div v-if="role == 'keeper'">
+              ready keeper
+            </div>
+            <div v-else>
+              ready bola
+            </div>
+          </div>
           <div v-if="position === num && positionMusuh === num">
             <div>
               bola dan keeper
@@ -33,7 +41,7 @@
     </div>
     <div class="grass">
       <div class="ball-container">
-        <img class="ball-image" src="../assets/ball.png">
+        <img class="ball-image" src="../assets/ball.png" v-if="role === 'shooter' && (positionMusuh == 0 || !loggedReady)">
       </div>
     </div>
   </div>
@@ -49,7 +57,8 @@ export default {
     return {
       start: false,
       host:  false,
-      ready: false
+      ready: false,
+      role: ''
     }
   },
   methods: {
@@ -92,6 +101,13 @@ export default {
     loggedRole(){
       console.log('ini logged role', this.$store.state[localStorage.getItem('player')].role)
       return this.$store.state[localStorage.getItem('player')].role
+    },
+    round(){
+      return this.$store.state.round
+    },
+    loggedReady(){
+      this.$store.state[localStorage.getItem('player')].ready
+      return this.$store.state[localStorage.getItem('player')].ready
     }
   },
   created(){
@@ -108,8 +124,26 @@ export default {
       else{
         this.$store.commit('CHANGE_HOST', data.host)
         this.$store.commit('CHANGE_GUEST', data.guest)
+        this.$store.commit('CHANGE_ROUND', data.round)
         this.start = data.start
   
+        if(this.round % 2 == 0){
+          if(localStorage.getItem('player') == 'host'){
+            this.role = 'shooter'
+          }
+          else{
+            this.role = 'keeper'
+          }
+        }
+        else{
+          if(localStorage.getItem('player') == 'host'){
+            this.role = 'keeper'
+          }
+          else{
+            this.role = 'shooter'
+          }
+        }
+
         if(host.name == localStorage.getItem('playerName') || localStorage.getItem('player') == 'host'){
           localStorage.setItem('player', 'host')
           this.$store.dispatch('changeHostName')
