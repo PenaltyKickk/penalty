@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import ScoreBoard from '../components/ScoreBoard.vue'
+import Result from '../views/Result.vue'
 
 Vue.use(VueRouter)
 
@@ -17,9 +17,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "room" */ '../views/Room.vue')
   },
   {
-    path: '/scoreboard',
-    name: 'scoreboard',
-    component: ScoreBoard
+    path: '/result',
+    name: 'result',
+    component: Result
   }
 ]
 
