@@ -7,6 +7,7 @@
       <div class="info-container">
         <b-button class="button-room" v-if="host && ready && !start" @click.prevent="startGame()">start</b-button>
         <span style="margin: 20px;">ROUND: {{ round }}</span>
+        <span style="margin: 20px;">{{ score }}</span>
       </div>
     <div class="post-container">
       <div class="columns is-multiline is-mobile columns-post">
@@ -124,6 +125,13 @@ export default {
     },
     round(){
       return this.$store.state.round
+    },
+    score(){
+      let notification = "";
+      if (this.$store.state.guest.name) {
+        notification = `SCORE : ( ${this.$store.state.host.name} ) ${this.$store.state.host.score} - ${this.$store.state.guest.score} ( ${this.$store.state.guest.name} )`
+      }
+      return notification
     },
     loggedReady(){
       this.$store.state[localStorage.getItem('player')].ready
