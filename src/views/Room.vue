@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import db from '../configs/firebase'
 
 export default {
@@ -47,7 +47,7 @@ export default {
     }
   },
   methods: {
-    roomGet(){
+    roomGet () {
       this.$store.commit('CHANGE_ROOM', this.$route.params.id)
     },
     move(pos){
@@ -71,7 +71,7 @@ export default {
   },
   computed: {
   },
-  created(){
+  created () {
     this.roomGet()
     db.collection("rooms").doc(this.$store.state.roomId)
     .onSnapshot((doc)=>{
