@@ -1,5 +1,9 @@
 <template>
+
   <div>
+    {{ status }}
+
+    <br>
     {{ hostName }}
     {{ hostScore }}
 
@@ -23,6 +27,29 @@ export default {
     },
     guestName() {
       return this.$store.state.guest.name
+    },
+    status(){
+      console.log('ini logged role', localStorage.getItem('player'))
+      let role = localStorage.getItem('player')
+      let result = 'draw'
+      if(role == 'host') {
+        if(this.hostScore > this.guestScore) {
+          result = 'win'
+        } else if(this.hostScore === this.guestScore) {
+          result = 'draw'
+        } else {
+          result = 'lose'
+        }
+      } else {
+        if(this.hostScore < this.guestScore) {
+          result = 'win'
+        } else if(this.hostScore === this.guestScore) {
+          result = 'draw'
+        } else {
+          result = 'lose'
+        }
+      }
+      return result
     }
   }
 }
