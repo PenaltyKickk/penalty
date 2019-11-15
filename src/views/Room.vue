@@ -4,25 +4,29 @@
       {{ num }}
     </button> -->
     <div class="room-container">
+      <div>
+        <button v-if="host && ready && !start" @click.prevent="startGame()">start</button>
+      </div>
     <div class="post-container">
       <div class="columns is-multiline is-mobile columns-post">
-        <div class="column is-4 column-post" @click.prevent="move(1)">
-          First column
-        </div>
-        <div class="column is-4 column-post" @click.prevent="move(2)">
-          Second column
-        </div>
-        <div class="column is-4 column-post" @click.prevent="move(3)">
-          Third column
-        </div>
-        <div class="column is-4 column-post" @click.prevent="move(4)">
-          First column
-        </div>
-        <div class="column is-4 column-post" @click.prevent="move(5)">
-          Second column
-        </div>
-        <div class="column is-4 column-post" @click.prevent="move(6)">
-          Third column
+        <div class="column is-4 column-post" v-for="num in 6" :key="num" @click.prevent="move(num)">
+          First column 
+          <div v-if="position === num && positionMusuh === 0">Ready</div>
+          <div v-if="position === num && positionMusuh === num">
+            <div>
+              bola dan keeper
+            </div>
+          </div>
+          <div v-if="position === num && positionMusuh !== 0 && positionMusuh !== num">
+            <div v-if="loggedRole == 'keeper'">
+              <div>
+                keeper
+              </div>
+            </div>
+            <div v-else>
+              bola
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -32,8 +36,6 @@
         <img class="ball-image" src="../assets/ball.png">
       </div>
     </div>
-  <div>
-    <button v-if="host && ready" @click.prevent="startGame()">start</button>
   </div>
 </template>
 
@@ -56,6 +58,7 @@ export default {
     },
     move(pos){
       const role = localStorage.getItem('player')
+      console.log(this.$store.state[role].ready)
       if(!this.$store.state[role].ready && this.start) {
         console.log('trigger')
         if(role == 'host'){
@@ -74,9 +77,22 @@ export default {
     },
     startGame(){
       this.$store.dispatch('updateStart', true)
+    },
+    roomDone(){
+      this.$router.push('/test')
     }
   },
   computed: {
+    position(){
+      return this.$store.state.position
+    },
+    positionMusuh(){
+      return this.$store.state.positionMusuh
+    },
+    loggedRole(){
+      console.log('ini logged role', this.$store.state[localStorage.getItem('player')].role)
+      return this.$store.state[localStorage.getItem('player')].role
+    }
   },
   created(){
     this.roomGet()
@@ -85,74 +101,91 @@ export default {
       const data = doc.data()
       const host = data.host
       const guest = data.guest
-      this.$store.commit('CHANGE_HOST', data.host)
-      this.$store.commit('CHANGE_GUEST', data.guest)
-      this.start = data.start
 
-      if(!host.name || localStorage.getItem('player') == 'host'){
-        localStorage.setItem('player', 'host')
-        this.$store.dispatch('changeHostName')
+      if(data.round > 6){
+        this.$router.push('/test')
       }
       else{
-        localStorage.setItem('player', 'guest')
-        this.$store.dispatch('changeGuestName')
-      }
-
-      if(localStorage.getItem('player') == 'host'){
-        this.host = true
-      }
-
-      if(data.available){
-        this.ready = true
-      }
-
-      if(this.start){
-        if(host.ready && guest.ready && !this.$store.state.updating){
-          this.$store.commit('CHANGE_UPDATING', true)
-          if(host.role == 'keeper'){
-            if(host.position == guest.position){
-              host.score++
-              const hostScore = host.score
-              console.log(hostScore)
-              this.$store.dispatch('updateScoreHost', {
-                roomId: this.$store.state.roomId,
-                score: hostScore
-              })
+        this.$store.commit('CHANGE_HOST', data.host)
+        this.$store.commit('CHANGE_GUEST', data.guest)
+        this.start = data.start
+  
+        if(host.name == localStorage.getItem('playerName') || localStorage.getItem('player') == 'host'){
+          localStorage.setItem('player', 'host')
+          this.$store.dispatch('changeHostName')
+        }
+        else{
+          localStorage.setItem('player', 'guest')
+          this.$store.dispatch('changeGuestName')
+        }
+  
+        if(localStorage.getItem('player') == 'host'){
+          this.$store.commit('CHANGE_POSITION', data.host.position)
+          this.$store.commit('CHANGE_POSITION_MUSUH', data.guest.position)
+        }
+        else{
+          this.$store.commit('CHANGE_POSITION', data.guest.position)
+          this.$store.commit('CHANGE_POSITION_MUSUH', data.host.position)
+        }
+  
+        if(localStorage.getItem('player') === 'host'){
+          console.log('host masuk')
+          this.host = true
+        }
+  
+        if(!data.available){
+          this.ready = true
+        }
+  
+        if(this.start && localStorage.getItem('player') === 'host'){
+          if(host.ready && guest.ready && !this.$store.state.updating){
+            this.$store.commit('CHANGE_UPDATING', true)
+            if(host.role == 'keeper'){
+              if(host.position == guest.position){
+                host.score++
+                const hostScore = host.score
+                console.log(hostScore)
+                this.$store.dispatch('updateScoreHost', {
+                  roomId: this.$store.state.roomId,
+                  score: hostScore
+                })
+              }
+              else{
+                guest.score++
+                const guestScore = guest.score
+                console.log(guestScore)
+  
+                this.$store.dispatch('updateScoreGuest', {
+                  roomId: this.$store.state.roomId,
+                  score: guestScore
+                })
+              }
             }
             else{
-              guest.score++
-              const guestScore = guest.score
-              console.log(guestScore)
-
-              this.$store.dispatch('updateScoreGuest', {
-                roomId: this.$store.state.roomId,
-                score: guestScore
-              })
-            }
-          }
-          else{
-            if(host.position !== guest.position){
-              host.score++
-              const hostScore = host.score
-              console.log(hostScore)
-              this.$store.dispatch('updateScoreHost', {
-                roomId: this.$store.state.roomId,
-                score: hostScore
-              })
-            }
-            else{
-              guest.score++
-              const guestScore = guest.score
-              console.log(guestScore)
-
-              this.$store.dispatch('updateScoreGuest', {
-                roomId: this.$store.state.roomId,
-                score: guestScore
-              })
+              if(host.position !== guest.position){
+                host.score++
+                const hostScore = host.score
+                console.log(hostScore)
+                this.$store.dispatch('updateScoreHost', {
+                  roomId: this.$store.state.roomId,
+                  score: hostScore
+                })
+              }
+              else{
+                guest.score++
+                const guestScore = guest.score
+                console.log(guestScore)
+  
+                this.$store.dispatch('updateScoreGuest', {
+                  roomId: this.$store.state.roomId,
+                  score: guestScore
+                })
+              }
             }
           }
         }
       }
+
     })
   }
 }
