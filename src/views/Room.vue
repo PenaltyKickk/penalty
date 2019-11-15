@@ -4,9 +4,9 @@
       {{ num }}
     </button> -->
     <div class="room-container">
-      <div>
-        <button v-if="host && ready && !start" @click.prevent="startGame()">start</button>
-        {{ round }}
+      <div class="info-container">
+        <b-button class="button-room" v-if="host && ready && !start" @click.prevent="startGame()">start</b-button>
+        <span style="margin: 20px;">ROUND: {{ round }}</span>
       </div>
     <div class="post-container">
       <div class="columns is-multiline is-mobile columns-post">
@@ -37,6 +37,18 @@
             <div v-else>
               <!-- bola -->
               <img class="image-ball" src="../assets/ball.png">
+            </div>
+          </div>
+          <div v-if="positionMusuh === num && positionMusuh !== position && loggedReady">
+            <div v-if="loggedRole == 'keeper'">
+              <!-- bola -->
+              <img class="image-ball" src="../assets/ball.png">
+            </div>
+            <div v-else>
+              <div>
+                <!-- keeper -->
+                <img class="image-keeper" src="../assets/just-keeper.png">
+              </div>
             </div>
           </div>
         </div>
@@ -278,5 +290,21 @@ export default {
   }
   .image-ball {
     height: 50px;
+  }
+  .button-room {
+    box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.1) !important;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 25px;
+    height: 50px;
+    width: 200px;
+    color: #7E3965;
+    box-shadow: 3px -1px 28px -6px #FFEAC8;
+    background: #FFEBC8 !important;
+  }
+  .info-container {
+    padding: 20px;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 30px;
+    color: #FFFFFF;
   }
 </style>
