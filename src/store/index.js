@@ -11,6 +11,7 @@ export default new Vuex.Store({
     playerName: '',
     rooms: [],
     roomId: '',
+    round: 0,
     host: {
       name: null,
       position: 5,
@@ -58,6 +59,9 @@ export default new Vuex.Store({
     },
     CHANGE_POSITION_MUSUH(state, payload){
       state.positionMusuh = payload
+    },
+    CHANGE_ROUND(state, payload){
+      state.round = payload
     }
   },
   actions: {
