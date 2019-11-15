@@ -120,6 +120,44 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
+    changeHostName({state, commit}){
+      const roomId = state.roomId
+      const playerName = localStorage.getItem('playerName')
+      db.collection('rooms').doc(roomId).update({
+        "host.name": playerName
+      })
+        .then(_=>{
+          console.log('Name Changed')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    changeGuestName({state, commit}){
+      const roomId = state.roomId
+      const playerName = localStorage.getItem('playerName')
+      db.collection('rooms').doc(roomId).update({
+        "guset.name": playerName
+      })
+        .then(_=>{
+          console.log('Name Changed')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
+    updateStart({state}, payload){
+      const roomId = state.roomId
+      db.collection('rooms').doc(roomId).update({
+        start: payload
+      })
+        .then(_=>{
+          console.log('Game Ready')
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    },
     getFreeRoom (context) {
       db.collection('rooms').where('available', '==', true)
       .onSnapshot((querySnapshot) => {

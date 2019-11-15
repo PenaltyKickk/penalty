@@ -1,8 +1,6 @@
 <template>
   <div>
-    <button v-for="num in 6" :key="num" @click.prevent="move(num)">
-      {{ num }}
-    </button>
+    <button v-if="host && ready" @click.prevent="startGame()">start</button>
   </div>
 </template>
 
@@ -14,7 +12,9 @@ export default {
   name: 'room',
   data() {
     return {
-      start: false
+      start: false,
+      host:  false,
+      ready: false
     }
   },
   methods: {
@@ -35,6 +35,9 @@ export default {
           position: pos
         })
       }
+    },
+    startGame(){
+      this.$store.dispatch('updateStart', true)
     }
   },
   computed: {
@@ -49,6 +52,23 @@ export default {
       this.$store.commit('CHANGE_HOST', data.host)
       this.$store.commit('CHANGE_GUEST', data.guest)
       this.start = data.start
+
+      if(!host.name || localStorage.getItem('player') == 'host'){
+        localStorage.setItem('player', 'host')
+        this.$store.dispatch('changeHostName')
+      }
+      else{
+        localStorage.setItem('player', 'guest')
+        this.$store.dispatch('changeGuestName')
+      }
+
+      if(localStorage.getItem('player') == 'host'){
+        this.host = true
+      }
+
+      if(data.available){
+        this.ready = true
+      }
 
       if(this.start){
         if(host.ready && guest.ready && !this.$store.state.updating){
