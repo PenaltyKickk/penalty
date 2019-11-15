@@ -1,8 +1,37 @@
 <template>
-  <div>
-    <button v-for="num in 6" :key="num" @click.prevent="move(num)">
+  <div id="room">
+    <!-- <button v-for="num in 6" :key="num" @click.prevent="move(num)">
       {{ num }}
-    </button>
+    </button> -->
+    <div class="room-container">
+    <div class="post-container">
+      <div class="columns is-multiline is-mobile columns-post">
+        <div class="column is-4 column-post" @click.prevent="move(1)">
+          First column
+        </div>
+        <div class="column is-4 column-post" @click.prevent="move(2)">
+          Second column
+        </div>
+        <div class="column is-4 column-post" @click.prevent="move(3)">
+          Third column
+        </div>
+        <div class="column is-4 column-post" @click.prevent="move(4)">
+          First column
+        </div>
+        <div class="column is-4 column-post" @click.prevent="move(5)">
+          Second column
+        </div>
+        <div class="column is-4 column-post" @click.prevent="move(6)">
+          Third column
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="grass">
+      <div class="ball-container">
+        <img class="ball-image" src="../assets/ball.png">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,17 +52,20 @@ export default {
     },
     move(pos){
       const role = localStorage.getItem('player')
-      if(role == 'host'){
-        this.$store.dispatch('hostTurn', {
-          roomId: this.$route.params.id,
-          position: pos
-        })
-      }
-      else{
-        this.$store.dispatch('guestTurn', {
-          roomId: this.$route.params.id,
-          position: pos
-        })
+      if(!this.$store.state[role].ready && this.start) {
+        console.log('trigger')
+        if(role == 'host'){
+          this.$store.dispatch('hostTurn', {
+            roomId: this.$route.params.id,
+            position: pos
+          })
+        }
+        else{
+          this.$store.dispatch('guestTurn', {
+            roomId: this.$route.params.id,
+            position: pos
+          })
+        }
       }
     }
   },
@@ -103,10 +135,43 @@ export default {
 </script>
 
 <style>
-  #room {
-    background-image: url('../assets/home-bg.jpg');
+  .room-container {
+    background-image: url('../assets/crowd.jpg');
+    background-position: 50px;
     background-size: cover;
-    width: 100vw;
-    height: 100vh;
+    opacity: 0.5;
+  }
+  .columns-post {
+    max-width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-top: solid 20px white;
+    border-left: solid 20px white;
+    border-right: solid 20px white;
+    border-radius: 10px;
+    box-shadow: inset 11px -18px 55px -5px rgba(0,0,0,0.1), 3px -1px 28px -6px rgba(0,0,0,0.75);
+  }
+  .column-post {
+    height: 25vh;
+    cursor: pointer;
+  }
+  .post-container {
+    padding-top: 10vh;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .grass {
+    background-image: url('https://www.123freevectors.com/wp-content/original/113923-green-horizontal-striped-background-vector.jpg');
+    background-size: cover;
+    height: 50vh;
+  }
+  .ball-container {
+    padding-top: 80px;
+    text-align: center;
+  }
+  .ball-image {
+    height: 80px;
   }
 </style>

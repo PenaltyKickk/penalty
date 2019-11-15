@@ -13,17 +13,6 @@
         <img style="height: 150px; margin-top: 20px;" src="../assets/keeper.png">
       </div>
     </div>
-<<<<<<< HEAD
-=======
-      <div>
-        <div v-for="room in rooms" :key="room.id">
-          {{ room.id }}
-          <button @click="joinRoom(room.id)">Join Room</button>
-          <button @click="changeRound(room.id)">Change Round</button>
-        </div>
-        <button @click="createRoom">Create Room</button>
-      </div>
->>>>>>> development
   </div>
 </template>
 
