@@ -1,5 +1,6 @@
 <template>
   <div class="lobby">
+    <!-- <AudioButton/> -->
     <b-button @click="createRoom" class="button-lobby">Create Room</b-button>
     <div class="columns columns-room is-multiline is-centered">
       <div v-for="room in rooms" :key="room.id" class="column column-room is-one-fifth">
@@ -20,6 +21,7 @@
 
 <script>
 import db from '../configs/firebase'
+// import AudioButton from '../components/AudioButton'
 
 export default {
   name: 'Lobby',
@@ -69,6 +71,9 @@ export default {
 
       }
     }
+  },
+  components: {
+    // AudioButton
   }
 }
 </script>
